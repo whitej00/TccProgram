@@ -85,6 +85,7 @@ class InputFrame(tk.Frame):
 
     def inputframe_data_preprocessing(self, inputFrame_data_dict):
         phase = inputFrame_data_dict["Phase"]
+        inputFrame_data_dict["OriginCapacity"] = inputFrame_data_dict["Capacity"]
         if phase == "1 Phase":
             pass
         elif phase == "3 Phase Y":
@@ -242,9 +243,7 @@ class AutoModelSelectContainer():
     # optionmenu 초기함수
     def show_menu(self):
         self.value_dict = app.input_pad.get_inputframe_data_dict()
-        start = time.time()
         self.FUSE_NFUSE_dict = pipeline.get_auto_data(self.value_dict)
-        end = time.time()
 
         self.model_frame=tk.Frame(self.parent, relief="solid", padx=4, pady=4)
         self.model_frame.pack(side='top')
@@ -252,24 +251,33 @@ class AutoModelSelectContainer():
 
     # TCC조건 충족하는 modenumber optionmenu 생성
     def show_modelnumber_list(self, parent_frame):
-        child_list = parent_frame.winfo_children()
-        if (len(child_list) > 1):
-            child_list[1].destroy()
+        child_list = app.container_right.winfo_children()
+        for child in child_list:
+            print(child)
+            child.destroy()
 
-        if (len(self.FUSE_NFUSE_dict) > 0):
+        if (self.FUSE_NFUSE_dict):
             fuse_nfuse_dict_key_list = list(self.FUSE_NFUSE_dict.keys())
             self.modelnumber_option = tk.StringVar(parent_frame)
             self.modelnumber_option.set(fuse_nfuse_dict_key_list[0])
             self.modelnumber_option.trace('w', self.draw_matplotlib)
             self.modelnumber_option_menu = tk.OptionMenu(parent_frame, self.modelnumber_option, *fuse_nfuse_dict_key_list)
             self.modelnumber_option_menu.pack(side='left')
-
             self.draw_matplotlib()
+        else:
+            tk.Label(app.container_right, 
+                     font=('Arial', 17),
+                     text="No suitable protection was found",
+                     foreground='red',
+                     padx=300, pady=500
+                     ).pack()
+
     # 입력된 데이터와, 선택한 model에 따라 matplotlib 실행
     def draw_matplotlib(self, *args):
         frameChildL = app.container_right.winfo_children()
-        if len(frameChildL):
-            frameChildL[0].destroy()
+        for child in frameChildL:
+            print(child)
+            child.destroy()
         
         fuse_nfuse_dict = self.FUSE_NFUSE_dict[self.modelnumber_option.get()]
 
@@ -327,12 +335,12 @@ class MatplotlibClass:
         ax.grid(True, which="both")
         self.ax = ax
 
-        self.title = f"KOREA {value_dict['Capacity']:.1f}kVA {value_dict['Voltage']:.1f}kV {value_dict['Phase']} TCC Curve"
+        self.title = f"{value_dict['OriginCapacity']:.1f}kVA {value_dict['Voltage']:.1f}kV {value_dict['Phase']} TCC Curve"
         ax.set(title=self.title)
 
-        capacityText = f"Capacity : {value_dict['Capacity']:.1f}kVA"
+        capacityText = f"Capacity : {value_dict['OriginCapacity']:.1f}kVA"
         voltageText = f"Voltage : {value_dict['Voltage']:.1f}kV"
-        impedenceText = f"z% : {value_dict['Impedence']:.1f}%"
+        impedenceText = f"Z% : {value_dict['Impedence']:.1f}%"
         self.footTitle = f"{capacityText:40}{modelnumber:<30}{impedenceText:<20}\n{voltageText:<40}{nmodelnumber:<30}"
 
         plt.xlabel(self.footTitle , horizontalalignment='left', x = 0)
