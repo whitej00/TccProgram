@@ -43,7 +43,8 @@ class InputFrame(tk.Frame):
         self.input_block_dict = {}
 
         name_list = ['Capacity', 'Voltage', 'Impedence']
-        value_list = [500.0, 12.2, 4.0]
+        value_list = [75.0, 22.9, 4.0]
+        # value_list = [500.0, 12.2, 4.0]
         for name, value in zip(name_list, value_list):
             input_block = self.create_text_input_frame(name, value)
             input_block.pack()
@@ -86,13 +87,15 @@ class InputFrame(tk.Frame):
     def inputframe_data_preprocessing(self, inputFrame_data_dict):
         phase = inputFrame_data_dict["Phase"]
         inputFrame_data_dict["OriginCapacity"] = inputFrame_data_dict["Capacity"]
+        
         if phase == "1 Phase":
             pass
         elif phase == "3 Phase Y":
             inputFrame_data_dict["Capacity"] /= 3
             inputFrame_data_dict["Voltage"] /= (3 ** (1.0/2.0))
         elif phase == "3 Phase Delta":
-            inputFrame_data_dict["Capacity"] /= 3
+            # inputFrame_data_dict["Capacity"] /= (3 ** (1.0/2.0))
+            pass
         
         return inputFrame_data_dict
 
@@ -253,7 +256,6 @@ class AutoModelSelectContainer():
     def show_modelnumber_list(self, parent_frame):
         child_list = app.container_right.winfo_children()
         for child in child_list:
-            print(child)
             child.destroy()
 
         if (self.FUSE_NFUSE_dict):
@@ -276,7 +278,6 @@ class AutoModelSelectContainer():
     def draw_matplotlib(self, *args):
         frameChildL = app.container_right.winfo_children()
         for child in frameChildL:
-            print(child)
             child.destroy()
         
         fuse_nfuse_dict = self.FUSE_NFUSE_dict[self.modelnumber_option.get()]

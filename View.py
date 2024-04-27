@@ -12,7 +12,7 @@ class Pipeline:
 
     def set_inrush_damage_load(self, value_dict):
         self.current = (value_dict['Capacity'] / value_dict['Voltage'])
-        self.maxFaultCurrent = (self.current / value_dict['Impedence'])*100 
+        self.maxFaultCurrent = (self.current / value_dict['Impedence']) * 100 
 
         self.Inrush_x = [x*self.current for x in [25,12,8,6,3.9,3]]
         self.Inrush_y = [0.01, 0.1, 0.4, 1, 3.5, 10]
@@ -42,6 +42,7 @@ class Pipeline:
     #         self.df[self.df['model'] == 'CL']['modelnumber'].unique(),
     #     )
     #     return values
+
     def get_manual_data(self):
         FUSE_list = self.df[self.df['device'] == 'FUSE']['model'].unique()
         NFUSE_list = self.df[self.df['device'] == 'NFUSE']['model'].unique()
