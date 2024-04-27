@@ -89,12 +89,12 @@ class InputFrame(tk.Frame):
         inputFrame_data_dict["OriginCapacity"] = inputFrame_data_dict["Capacity"]
         
         if phase == "1 Phase":
-            pass
+            inputFrame_data_dict["Current"] = inputFrame_data_dict["Capacity"] / inputFrame_data_dict["Voltage"]   
         elif phase == "3 Phase Y":
-            inputFrame_data_dict["Capacity"] /= 3
             inputFrame_data_dict["Voltage"] /= (3 ** (1.0/2.0))
+            inputFrame_data_dict["Current"] = inputFrame_data_dict["Capacity"] / inputFrame_data_dict["Voltage"] / 3
         elif phase == "3 Phase Delta":
-            # inputFrame_data_dict["Capacity"] /= (3 ** (1.0/2.0))
+            inputFrame_data_dict["Current"] = inputFrame_data_dict["Capacity"] / inputFrame_data_dict["Voltage"] / (3 ** (1.0/2.0)) / 3
             pass
         
         return inputFrame_data_dict

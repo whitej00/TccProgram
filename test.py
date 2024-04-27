@@ -1,11 +1,13 @@
-import matplotlib.pyplot as plt
-import math
+def test(voltage, capacity, phase):
+    if phase == "Y":
+        voltage = voltage / (3 ** (0.5))
+        current = capacity / voltage / 3
+        print("3 phase Y : ", current)
+    elif phase == "delta":
+        voltage = voltage
+        current = capacity / (voltage / (3 ** (0.5))) / 3
+        print("3 phase delta : ", current)
 
-EFFORT = 10000
-X = list(range(1, 100))
-# Y = list(map(lambda x : 10 * math.log2(x), X))
-Y = list(map(lambda x : x ** 2, X))
-Y2 = list(map(lambda y : EFFORT / y, Y))
 
-plt.plot(X, Y, 'r--', X, Y2, 'b--')
-plt.show()
+test(20, 5, "Y")
+test(20, 5, "delta")

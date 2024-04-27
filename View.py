@@ -11,7 +11,7 @@ class Pipeline:
         self.df = self.model.get_dataframe()
 
     def set_inrush_damage_load(self, value_dict):
-        self.current = (value_dict['Capacity'] / value_dict['Voltage'])
+        self.current = value_dict['Current']
         self.maxFaultCurrent = (self.current / value_dict['Impedence']) * 100 
 
         self.Inrush_x = [x*self.current for x in [25,12,8,6,3.9,3]]
