@@ -11,6 +11,7 @@ class Pipeline:
         self.df = self.model.get_dataframe()
 
     def set_inrush_damage_load(self, value_dict):
+        self.voltage = value_dict['Voltage']
         self.current = value_dict['Current']
         self.maxFaultCurrent = (self.current / value_dict['Impedence']) * 100 
 
@@ -81,6 +82,9 @@ class Pipeline:
         satisfied_model_dict = {}
         nfuse_list = self.get_device('NFUSE')
         fuse_list = self.get_device('FUSE')
+        print(self.voltage)
+        if(self.voltage >= 15):
+            return satisfied_model_dict
         for i in fuse_list.index:         
             for j in nfuse_list.index:
                 fuse = fuse_list.loc[i]
