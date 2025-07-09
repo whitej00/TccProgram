@@ -1,10 +1,20 @@
+import os
+import sys
 import pandas as pd
 import numpy as np
 
 
 class ModelFrame:
     def __init__(self):
-        self.df = pd.read_excel("./test.xlsx",engine="openpyxl").dropna()
+        if getattr(sys, 'frozen', False):
+            # PyInstaller로 빌드된 실행 파일일 경우
+            base_path = sys._MEIPASS
+        else:
+            # 로컬에서 직접 실행할 경우 (예: App.py)
+            base_path = os.path.dirname(os.path.abspath(__file__))
+
+        excel_path = os.path.join(base_path, "test.xlsx")
+        self.df = pd.read_excel(excel_path, engine="openpyxl").dropna()
         self.preprocessing()
 
     def get_dataframe(self):

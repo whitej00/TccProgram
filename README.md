@@ -1,1 +1,7 @@
 "# TccProgram" 
+pyinstaller -w App.py \
+  --hidden-import=numpy._core._exceptions \
+  --hidden-import=numpy._core.multiarray \
+  --hidden-import=numpy._core.overrides \
+  --hidden-import=openpyxl \
+  --hidden-import=openpyxl.cell._writer

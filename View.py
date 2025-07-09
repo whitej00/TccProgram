@@ -82,7 +82,6 @@ class Pipeline:
         satisfied_model_dict = {}
         nfuse_list = self.get_device('NFUSE')
         fuse_list = self.get_device('FUSE')
-        print(self.voltage)
         if(self.voltage >= 15):
             return satisfied_model_dict
         for i in fuse_list.index:         
