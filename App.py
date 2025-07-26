@@ -41,15 +41,15 @@ class App(tk.Tk):
         self.error_frame = tk.Frame(self.container_left, width=200, height=200, relief="raised", bd=4)
         self.error_frame.place(x=100, y=330)
 
-        error_text = f"Rated voltage less than 13.2 KV available\nYour Voltage {voltage:.1f} kV"
+        error_text = f"Rated voltage\n less than\n 13.2 KV available!!\n\nYour Voltage {voltage:.1f} kV"
 
         tk.Label(
             self.error_frame,
-            font=('Arial', 15),
+            font=('Arial', 10),
             text=error_text,
             foreground='red',
             justify="center",
-            padx=20, pady=20
+            padx=36, pady=20
         ).pack()
 
 # capacity, voltage, impedence, phase 입력
