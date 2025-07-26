@@ -25,15 +25,32 @@ class App(tk.Tk):
         self.input_pad = InputFrame(self.container_left)
         self.input_pad.place(x=100, y=100)
 
+    def custom_exit(self):
+        plt.close()
+        self.destroy()
+
+    def setSelectorFrame(self):
         self.mode_select_pad = ModeSelectFrame(self.container_left)
         self.mode_select_pad.place(x=100, y=330)
 
         self.pdf_pad = PdfFrame(self.container_left)
         self.pdf_pad.place(x=100, y=480)
 
-    def custom_exit(self):
-        plt.close()
-        self.destroy()
+    def setErrorFrame(self, voltage):
+        # 오류 메시지 Frame 생성
+        self.error_frame = tk.Frame(self.container_left, width=200, height=200, relief="raised", bd=4)
+        self.error_frame.place(x=100, y=330)
+
+        error_text = f"Rated voltage less than 13.2 KV available\nYour Voltage {voltage:.1f} kV"
+
+        tk.Label(
+            self.error_frame,
+            font=('Arial', 15),
+            text=error_text,
+            foreground='red',
+            justify="center",
+            padx=20, pady=20
+        ).pack()
 
 # capacity, voltage, impedence, phase 입력
 class InputFrame(tk.Frame):
@@ -69,6 +86,16 @@ class InputFrame(tk.Frame):
         text.insert(tk.END, value)
         text.pack(side="left")
 
+        def on_text_change(event):
+            text.edit_modified(False)
+            try:
+                float(text.get(1.0, "end").strip())  # 숫자 변환 확인
+                self.create_bottom_select_frame(None)
+            except ValueError:
+                pass  # 숫자가 아닐 때는 무시
+
+        text.bind("<<Modified>>", on_text_change)
+
         return input_block
     
     def create_option_menu_frame(self):
@@ -77,12 +104,34 @@ class InputFrame(tk.Frame):
 
         model_option = tk.StringVar(input_block)
         model_option.set(phase_list[0])
+        model_option.trace(
+            "w", 
+            lambda name, index, mode : 
+            self.create_bottom_select_frame(model_option)
+        )
 
         model_option_menu = tk.OptionMenu(input_block, model_option, *phase_list)
         model_option_menu.pack(side="left")
 
         input_block.pack()
         return model_option
+    
+    def create_bottom_select_frame(self, model_option):
+        if hasattr(app, 'mode_select_pad') and app.mode_select_pad.winfo_exists():
+            app.mode_select_pad.destroy()
+
+        if hasattr(app, 'pdf_pad') and app.pdf_pad.winfo_exists():
+            app.pdf_pad.destroy()
+
+        if hasattr(app, 'error_frame') and app.error_frame.winfo_exists():
+            app.error_frame.destroy()
+
+        value_dict = self.get_inputframe_data_dict()
+
+        if(value_dict['Voltage'] > 13.2):
+            app.setErrorFrame(value_dict['Voltage'])
+        else:
+            app.setSelectorFrame()
 
     def inputframe_data_preprocessing(self, inputFrame_data_dict):
         phase = inputFrame_data_dict["Phase"]
