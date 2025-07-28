@@ -60,7 +60,7 @@ class InputFrame(tk.Frame):
         self.input_block_dict = {}
 
         name_list = ['Capacity', 'Voltage', 'Impedence']
-        value_list = [75.0, 22.9, 4.0]
+        value_list = [75.0, 6.6, 4.0]
         # value_list = [500.0, 12.2, 4.0]
         for name, value in zip(name_list, value_list):
             input_block = self.create_text_input_frame(name, value)
