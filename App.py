@@ -41,7 +41,7 @@ class App(tk.Tk):
         self.error_frame = tk.Frame(self.container_left, width=200, height=200, relief="raised", bd=4)
         self.error_frame.place(x=100, y=330)
 
-        error_text = f"Rated voltage\n less than\n 13.2 KV available!!\n\nYour Voltage {voltage:.1f} kV"
+        error_text = f"Rated voltage\n less than\n 15 KV available!!\n\nYour Voltage {voltage:.1f} kV"
 
         tk.Label(
             self.error_frame,
@@ -128,7 +128,7 @@ class InputFrame(tk.Frame):
 
         value_dict = self.get_inputframe_data_dict()
 
-        if(value_dict['Voltage'] > 13.2):
+        if(value_dict['Voltage'] > 15):
             app.setErrorFrame(value_dict['Voltage'])
         else:
             app.setSelectorFrame()
